@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1b2d">
+  <title>{% block title %}{{ app_name }}{% endblock %}</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/static/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/static/icons/icon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">🏋️ {{ app_name }}</a>
+    <nav class="pills">
+      {% for item in nav %}
+      <a href="{{ item.href }}" class="pill {% if path == item.href %}active{% endif %}">{{ item.label }}</a>
+      {% endfor %}
+    </nav>
+  </header>
+
+  {% if msg %}<div class="flash ok" role="status">{{ msg }}</div>{% endif %}
+  {% if err %}<div class="flash bad" role="alert">{{ err }}</div>{% endif %}
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="foot">
+    <span>Not medical advice. Hydrate every session. Stop and seek care for any warning sign.</span>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

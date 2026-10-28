@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Week · {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>This week</h1>
+  <p class="muted">Phase {{ st.phase }} · {{ phase_def.name }} · week {{ st.program_week }} ·
+     {{ phase_def.days_per_week }}×/week. Scheduled: {{ scheduled | join(', ') }}.</p>
+  {% if st.last_decision %}
+  <p class="decision"><strong>{{ st.last_decision | upper }}</strong> — {{ st.last_decision_reason }}</p>
+  {% endif %}
+  <p class="rule muted">Rule: never miss twice in a row. If you miss a scheduled day, the next one matters most.</p>
+</section>
+
+<section class="card">
+  <h2>Weekly summary</h2>
+  <p class="nudge {{ summary.nudge_level }}">{{ summary.nudge }}</p>
+  <p class="scheme">Sessions: {{ summary.completed }} / {{ summary.planned }} this week</p>
+
+  {% if summary.volume %}
+  <h3 class="muted small">Conditioning volume vs per-session cap</h3>
+  <ul class="volbars">
+    {% for v in summary.volume %}
+    <li>
+      <span class="vlabel">{{ v.cap_key | replace('_',' ') }}</span>
+      <span class="vbar"><span class="vfill" style="width: {{ [ (v.done / v.cap * 100) if v.cap else 0, 100] | min }}%"></span></span>
+      <span class="vnum">{{ v.done }}{% if v.cap %} <span class="muted">/ {{ v.cap }} cap</span>{% endif %}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if summary.prs %}
+  <h3 class="muted small">PRs this week</h3>
+  <ul class="prweek">
+    {% for p in summary.prs %}
+    <li>🎉 {{ (mv(p.movement_id).name if mv(p.movement_id) else p.movement_id) }}: {{ p.value | round(1) }} {{ p.unit }}
+      <span class="tag {{ p.source }}">{{ p.source }}</span></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if summary.decision %}
+  <p class="decision"><strong>Next week: {{ summary.decision | upper }}</strong> — {{ summary.reason }}</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Recent sessions</h2>
+  {% if sessions %}
+  <ul class="sesslist">
+    {% for s in sessions %}
+    <li class="{{ s.status }}">
+      <span class="date">{{ s.date }}</span>
+      <span class="badge {{ s.status }}">{{ s.status }}</span>
+      <span class="muted">phase {{ s.phase }} · wk {{ s.program_week }}
+        {% if s.is_deload %}· deload{% endif %}{% if s.is_active_recovery %}· active recovery{% endif %}
+        {% if s.session_rpe %}· {{ s.session_rpe | rpe }}{% endif %}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}<p class="muted">No sessions yet. Head to Today to start.</p>{% endif %}
+</section>
+
+{% if decisions %}
+<section class="card">
+  <h2>Week decisions</h2>
+  <ul class="decisions">
+    {% for d in decisions %}
+    <li><span class="badge">{{ d.decision }}</span> wk {{ d.program_week }}: {{ d.reason }}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,9 @@
+# Snippet for your existing Caddyfile. Single-user app, so Caddy adds HTTP basic auth.
+# Generate the hash:  caddy hash-password --plaintext 'your-password'
+# then paste it below (the $ signs must be kept; wrap in single quotes if editing inline).
+backyard.example.com {
+    basic_auth {
+        earl $2a$14$REPLACE_WITH_CADDY_HASH_PASSWORD_OUTPUT
+    }
+    reverse_proxy 127.0.0.1:8110
+}

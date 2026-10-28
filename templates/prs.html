@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}PRs · {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Personal records</h1>
+  <p class="muted">Tested and estimated maxes are kept separate. Pre-rhabdo numbers are
+     reference only — they are <strong>never</strong> used to set your training loads.</p>
+</section>
+
+{% if movements %}
+{% for m in movements %}
+<section class="card">
+  <h2>{{ mv(m.id).name }}</h2>
+  <table class="prs">
+    <tr><th>Kind</th><th>Best</th><th>Source</th><th>Date</th></tr>
+    {% for b in bests[m.id] %}
+    <tr class="src-{{ b.source }}">
+      <td>{{ b.kind }}</td>
+      <td>{{ b.value | round(1) }} {{ b.unit }}</td>
+      <td><span class="tag {{ b.source }}">{{ b.source }}</span></td>
+      <td class="muted">{{ b.date }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</section>
+{% endfor %}
+{% else %}
+<section class="card"><p class="muted">No PRs yet — log a set on Today and they appear automatically.</p></section>
+{% endif %}
+
+<section class="card">
+  <h2>Log a tested max</h2>
+  <p class="muted">Use this on a testing day (Phase 2+). A normal working set already updates your estimate automatically.</p>
+  <form method="post" action="/prs/tested" class="inline-form">
+    <select name="movement_id" required>
+      {% for m in loggable %}<option value="{{ m.id }}">{{ m.name }}</option>{% endfor %}
+    </select>
+    <select name="kind"><option>1RM</option><option>3RM</option><option>5RM</option><option value="max_reps">max reps</option></select>
+    <input type="number" name="value" step="0.5" placeholder="value" required>
+    <button class="btn" type="submit">Save tested</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Re-establish: pre-rhabdo reference</h2>
+  <p class="muted">Enter old numbers for context only. They are flagged historical and never programmed.</p>
+  <form method="post" action="/prs/historical" class="inline-form">
+    <select name="movement_id" required>
+      {% for m in loggable %}<option value="{{ m.id }}">{{ m.name }}</option>{% endfor %}
+    </select>
+    <select name="kind"><option>1RM</option><option>3RM</option><option>5RM</option><option value="max_reps">max reps</option></select>
+    <input type="number" name="value" step="0.5" placeholder="value" required>
+    <button class="btn" type="submit">Save reference</button>
+  </form>
+</section>
+
+{% endblock %}

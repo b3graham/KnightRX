@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Backyard Box">
+  <rect width="512" height="512" rx="96" fill="#0f1b2d"/>
+  <g fill="none" stroke="#4cc2ff" stroke-width="34" stroke-linecap="round">
+    <line x1="150" y1="256" x2="362" y2="256"/>
+    <line x1="150" y1="206" x2="150" y2="306"/>
+    <line x1="362" y1="206" x2="362" y2="306"/>
+    <line x1="104" y1="226" x2="104" y2="286"/>
+    <line x1="408" y1="226" x2="408" y2="286"/>
+  </g>
+</svg>

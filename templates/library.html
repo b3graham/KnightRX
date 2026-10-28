@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Movements · {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Movement library</h1>
+  <p class="muted">What each movement needs, how it scales, and — based on your equipment —
+     whether you'll do it as-is or substituted. Capped movements are flagged.</p>
+</section>
+
+{% for cat, rows in cats.items() %}
+<section class="card">
+  <h2>{{ cat | title }}</h2>
+  <ul class="movlist">
+    {% for m in rows %}
+    <li>
+      <div class="movhead">
+        <strong>{{ m.name }}</strong>
+        {% if m.cap_key %}<span class="tag small cap">capped: {{ m.cap_key }}</span>{% endif %}
+        {% if m.high_risk %}<span class="tag small risk">high-risk</span>{% endif %}
+        {% if not m.available %}<span class="tag small sub">→ {{ m.substitute_name or 'no sub' }}</span>{% endif %}
+      </div>
+      <div class="muted small">
+        min phase {{ m.min_phase }}
+        {% if m.equipment %}· needs: {{ m.equipment | join(', ') }}{% endif %}
+        {% if m.skill_prereqs %}· prereq: {{ m.skill_prereqs | join(', ') }}{% endif %}
+      </div>
+      {% if m.scaling %}<div class="muted small">scales: {{ m.scaling | join(' · ') }}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+
+{% endblock %}

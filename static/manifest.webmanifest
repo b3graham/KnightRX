@@ -1,0 +1,14 @@
+{
+  "name": "Backyard Box",
+  "short_name": "Backyard Box",
+  "description": "Backyard CrossFit PR tracker and progressive, safety-capped programming.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1b2d",
+  "theme_color": "#0f1b2d",
+  "icons": [
+    {"src": "/static/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

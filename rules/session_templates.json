@@ -1,0 +1,35 @@
+{
+  "_comment": "Warm-up and cool-down building blocks. The engine assembles each session's warm-up from the 'general' pool plus the 'specific_by_category' entries that match the day's movements (8-10 min total), and a cool-down from the 'cooldown' pool (~5 min). active_recovery is the template used when a check-in forces an easy day.",
+
+  "warmup": {
+    "general": [
+      "3 min easy bike or jump rope, building pace",
+      "Hip + ankle mobility: 60s each (hip openers, ankle rocks)",
+      "10 scap pulls or band pull-aparts, 10 arm circles each way"
+    ],
+    "specific_by_category": {
+      "barbell":    ["2 rounds: 5 empty-bar reps of today's lift at a controlled tempo", "10 air squats, 5 good-mornings with the empty bar"],
+      "gymnastics": ["2 rounds: 20s dead hang + 5 scap pulls", "10 slow push-ups or ring rows, 10 air squats"],
+      "kettlebell": ["2 rounds: 10 light KB deadlifts, 10 light KB swings to chest height"],
+      "ball":       ["2 rounds: 8 light wall balls to a lower target, 8 air squats"],
+      "monostructural": ["2 min progressive bike/rope, 3 x 15s pickups"]
+    }
+  },
+
+  "cooldown": [
+    "2 min very easy bike or walk to bring heart rate down",
+    "Couch stretch 60s/side; hamstring stretch 60s/side",
+    "Thoracic opener 60s; slow nasal breathing 1 min",
+    "Log how you feel and hydrate before you leave the gym"
+  ],
+
+  "active_recovery": {
+    "title": "Active recovery",
+    "stimulus": "Easy aerobic flush + mobility. Nothing hard — this protects tomorrow.",
+    "blocks": [
+      "15-20 min easy bike at a conversational pace (RPE <= 4)",
+      "5-8 min full-body mobility: hips, t-spine, shoulders, ankles",
+      "Optional: 2 x 30s easy plank, slow breathing"
+    ]
+  }
+}

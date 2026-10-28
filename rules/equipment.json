@@ -1,0 +1,19 @@
+{
+  "_comment": "Editable equipment profile. 'owned' is the default seeded on first run; change it in Settings. 'multi_weight' items (kettlebells, med ball) carry a 'weights' list in lb that you set to what you actually own. Movements in movements.json reference these ids; when a required id is not owned, the engine substitutes per the movement's 'substitutions'.",
+  "equipment": [
+    {"id": "barbell",       "name": "Olympic barbell (45 lb)",       "category": "barbell",        "owned": true},
+    {"id": "bumper_plates", "name": "Bumper plates",                 "category": "barbell",        "owned": true},
+    {"id": "squat_rack",    "name": "Squat rack",                    "category": "rack",           "owned": true},
+    {"id": "pullup_bar",    "name": "Pull-up bar",                   "category": "gymnastics",     "owned": true},
+    {"id": "kettlebell",    "name": "Kettlebells",                   "category": "kettlebell",     "owned": true,  "multi_weight": true, "weights": [26, 35, 53], "unit": "lb"},
+    {"id": "jump_rope",     "name": "Jump rope",                     "category": "monostructural", "owned": true},
+    {"id": "wall_ball",     "name": "Wall ball / medicine ball",     "category": "ball",           "owned": true,  "multi_weight": true, "weights": [14], "unit": "lb"},
+    {"id": "bike",          "name": "Bike",                          "category": "monostructural", "owned": true},
+    {"id": "band",          "name": "Resistance band",               "category": "accessory",      "owned": false},
+    {"id": "bench",         "name": "Flat bench",                    "category": "barbell",        "owned": false},
+    {"id": "box",           "name": "Plyo box",                      "category": "gymnastics",     "owned": false},
+    {"id": "rower",         "name": "Rower",                         "category": "monostructural", "owned": false},
+    {"id": "rings",         "name": "Gymnastic rings",               "category": "gymnastics",     "owned": false},
+    {"id": "ghd",           "name": "GHD",                           "category": "gymnastics",     "owned": false}
+  ]
+}

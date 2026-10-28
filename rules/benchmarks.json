@@ -1,0 +1,33 @@
+{
+  "_comment": "Benchmark WODs. 'min_phase' locks a benchmark until that phase (high-volume classics are Phase 3). Benchmarks are never auto-programmed into a normal day; they are an explicit, opt-in test. When one is offered, the engine still runs it through apply_safety_caps, so the reps you are prescribed never exceed your current per-session cap — the 'rx' reps are shown as reference only, with a warning when they exceed your cap. 'movements' lists the structured work so volume can be checked.",
+  "benchmarks": [
+    {"id": "cindy", "name": "Cindy", "format": "amrap", "time_cap_min": 20, "min_phase": 2, "volume_class": "moderate",
+     "stimulus": "Steady gymnastics engine; keep rounds unbroken and smooth.",
+     "rx_rounds_estimate": 12,
+     "movements": [{"movement_id": "strict_pullup", "reps": 5}, {"movement_id": "pushup", "reps": 10}, {"movement_id": "air_squat", "reps": 15}]},
+
+    {"id": "annie", "name": "Annie", "format": "for_time", "time_cap_min": 15, "min_phase": 2, "volume_class": "moderate",
+     "stimulus": "Double-unders + midline, 50-40-30-20-10.",
+     "movements": [{"movement_id": "double_unders", "reps": 150}, {"movement_id": "situp", "reps": 150}]},
+
+    {"id": "karen", "name": "Karen", "format": "for_time", "time_cap_min": 15, "min_phase": 3, "volume_class": "high",
+     "stimulus": "150 wall balls for time — very high eccentric volume. Scaled hard for a returning athlete.",
+     "movements": [{"movement_id": "wall_ball", "reps": 150}]},
+
+    {"id": "fran", "name": "Fran", "format": "for_time", "time_cap_min": 12, "min_phase": 3, "volume_class": "high",
+     "stimulus": "21-15-9 thrusters + pull-ups. Classic sprint; scale load and reps.",
+     "movements": [{"movement_id": "thruster", "reps": 45}, {"movement_id": "strict_pullup", "reps": 45}]},
+
+    {"id": "helen", "name": "Helen", "format": "for_time", "time_cap_min": 15, "min_phase": 3, "volume_class": "high",
+     "stimulus": "3 rounds: run 400m / 21 KB swings / 12 pull-ups.",
+     "movements": [{"movement_id": "run", "reps": 1200}, {"movement_id": "kb_swing", "reps": 63}, {"movement_id": "strict_pullup", "reps": 36}]},
+
+    {"id": "murph", "name": "Murph", "format": "for_time", "time_cap_min": 60, "min_phase": 3, "volume_class": "high",
+     "stimulus": "1mi run, 100 pull-ups, 200 push-ups, 300 squats, 1mi run. Partition and scale heavily.",
+     "movements": [{"movement_id": "run", "reps": 3200}, {"movement_id": "strict_pullup", "reps": 100}, {"movement_id": "pushup", "reps": 200}, {"movement_id": "air_squat", "reps": 300}]},
+
+    {"id": "baseline_bike", "name": "Bike Baseline Test", "format": "for_time", "time_cap_min": 10, "min_phase": 0, "volume_class": "moderate",
+     "stimulus": "Repeatable conditioning test: max calories in a fixed time, or time for a fixed distance.",
+     "movements": [{"movement_id": "bike", "reps": 0}]}
+  ]
+}

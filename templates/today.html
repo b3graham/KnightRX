@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Today · {{ app_name }}{% endblock %}
+{% block content %}
+
+{# ---- reusable inline set-logging form ---- #}
+{% macro log_set_form(session_id, movement_id, name, movement, is_wod) %}
+<form method="post" action="/today/log-set" class="inline-form set-form">
+  <input type="hidden" name="session_id" value="{{ session_id }}">
+  <input type="hidden" name="movement_id" value="{{ movement_id }}">
+  <input type="hidden" name="is_wod" value="{{ '1' if is_wod else '0' }}">
+  <span class="mvname">{{ name }}</span>
+  {% if movement and movement.unit == 'lb' %}
+    <input type="number" name="weight" step="5" min="0" inputmode="decimal" placeholder="lb">
+  {% endif %}
+  <input type="number" name="reps" min="0" inputmode="numeric"
+         placeholder="{{ 'sec' if movement and movement.unit in ('sec',) else ('cal' if movement and movement.unit=='cal' else 'reps') }}">
+  <input type="number" name="rpe" step="0.5" min="0" max="10" inputmode="decimal" placeholder="RPE">
+  <select name="rx"><option value="rx">Rx</option><option value="scaled">Scaled</option></select>
+  <button class="btn small" type="submit">Log</button>
+</form>
+{% endmacro %}
+
+{% if view == "checkin" %}
+<section class="card">
+  <h1>Today's check-in</h1>
+  <p class="muted">Phase {{ st.phase }} · {{ phase_def.name }} · week {{ st.program_week }}. Ten seconds — this scales your day and keeps you safe.</p>
+  <form method="post" action="/today/checkin" class="stack">
+    <label>Sleep last night (hours)
+      <input type="number" name="sleep_hours" step="0.5" min="0" max="14" inputmode="decimal" placeholder="e.g. 7">
+    </label>
+    <label>Soreness today: <output id="soreOut">3</output>/10
+      <input type="range" name="soreness" min="0" max="10" value="3" data-output="soreOut">
+    </label>
+    <label>Hydration
+      <select name="hydration">
+        <option value="ok">Well hydrated</option>
+        <option value="low">A bit low</option>
+        <option value="poor">Poorly hydrated</option>
+      </select>
+    </label>
+    <label class="check"><input type="checkbox" name="illness" value="1"> Feeling ill / run down</label>
+
+    <fieldset class="redflags">
+      <legend>Warning signs (be honest — any yes stops training)</legend>
+      <label class="check"><input type="checkbox" name="redflag_dark_urine" value="1"> Dark or cola-coloured urine</label>
+      <label class="check"><input type="checkbox" name="redflag_pain_swelling" value="1"> Muscle pain or swelling far beyond normal soreness</label>
+      <label class="check"><input type="checkbox" name="redflag_weakness" value="1"> Unusual muscle weakness</label>
+    </fieldset>
+
+    <button class="btn primary big" type="submit">Build today's session</button>
+  </form>
+</section>
+
+{% elif view == "blocked" %}
+<section class="card danger">
+  <h1>⛔ Training blocked</h1>
+  <p>{{ message }}</p>
+  <p class="muted">No workout will be programmed until you confirm a clinician has cleared you.</p>
+  <form method="post" action="/today/cleared">
+    <button class="btn danger big" type="submit">A clinician has cleared me — let me continue</button>
+  </form>
+</section>
+
+{% elif view == "session" %}
+{% set p = plan %}
+<section class="card hydrate">💧 Hydrate before, during, and after today's session.</section>
+
+<section class="card">
+  <div class="sesshead">
+    <h1>Today {% if p.is_deload %}<span class="tag deload">DELOAD</span>{% endif %}
+      {% if p.is_active_recovery %}<span class="tag easy">ACTIVE RECOVERY</span>{% endif %}</h1>
+    <span class="muted">Phase {{ p.phase }} · week {{ p.program_week }} · ~{{ p.planned_minutes }} min</span>
+  </div>
+  {% if p.notes %}<ul class="notes">{% for n in p.notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+</section>
+
+{% if p.is_active_recovery %}
+<section class="card">
+  <h2>Active recovery</h2>
+  <p class="muted">{{ p.wod.stimulus }}</p>
+  <ul class="blocks">{% for b in p.wod.blocks %}<li>{{ b }}</li>{% endfor %}</ul>
+</section>
+{% else %}
+
+{% if p.warmup %}
+<section class="card">
+  <h2>Warm-up</h2>
+  <ul class="blocks">{% for w in p.warmup %}<li>{{ w }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+
+{% if p.strength %}
+<section class="card">
+  <h2>Strength — {{ p.strength.name }}</h2>
+  <p class="scheme">{{ p.strength.sets }} × {{ p.strength.reps }}
+    {% if p.strength.load.type == 'pct' %}@ {{ p.strength.load.weight | weight }} ({{ p.strength.load.pct | pct }} of {{ p.strength.load.of_est_1rm | weight }} est){% elif p.strength.load.type == 'rpe' %}@ {{ p.strength.load.rpe | rpe }} — {{ p.strength.load.cue }}{% endif %}
+  </p>
+  {{ log_set_form(sess.id, p.strength.movement_id, p.strength.name, mv(p.strength.movement_id), False) }}
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>WOD — {{ p.wod.format | replace('_',' ') | title }}
+    {% if p.wod.time_cap_min %}<span class="muted">· cap {{ p.wod.time_cap_min }} min</span>{% endif %}</h2>
+  <p class="muted">{{ p.wod.stimulus }}</p>
+  {% if p.wod.rounds_target %}<p class="scheme">Target: {{ p.wod.rounds_target }} rounds</p>{% endif %}
+  <ul class="wodlist">
+    {% for m in p.wod.movements %}
+    <li>
+      <strong>{{ m.planned_total }}{% if m.unit not in ('reps',) %} {{ m.unit }}{% endif %} {{ m.name }}</strong>
+      {% if m.load %}<span class="muted">@ {{ m.load.weight | weight }}{% if m.load.note %} ({{ m.load.note }}){% endif %}</span>{% endif %}
+      {% if m.scaled_note %}<span class="tag small">{{ m.scaled_note }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <details class="logbox">
+    <summary>Log a WOD movement set</summary>
+    {% for m in p.wod.movements %}
+      {{ log_set_form(sess.id, m.movement_id, m.name, mv(m.movement_id), True) }}
+    {% endfor %}
+  </details>
+
+  <form method="post" action="/today/log-wod" class="inline-form">
+    <input type="hidden" name="session_id" value="{{ sess.id }}">
+    <input type="hidden" name="format" value="{{ p.wod.format }}">
+    <label>Score
+      <select name="score_type">
+        <option value="rounds_reps">rounds + reps</option>
+        <option value="time">time (mm:ss)</option>
+        <option value="cal">calories</option>
+        <option value="load">load</option>
+      </select>
+    </label>
+    <input type="text" name="score_value" placeholder="e.g. 5+12 or 9:40" required>
+    <select name="rx"><option value="rx">Rx</option><option value="scaled">Scaled</option></select>
+    <button class="btn" type="submit">Log score</button>
+  </form>
+</section>
+
+{% if p.cooldown %}
+<section class="card">
+  <h2>Cool-down</h2>
+  <ul class="blocks">{% for c in p.cooldown %}<li>{{ c }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% endif %}
+
+{% if sets %}
+<section class="card">
+  <h2>Logged today</h2>
+  <ul class="logged">
+    {% for s in sets %}<li>{{ mv(s.movement_id).name if mv(s.movement_id) else s.movement_id }}:
+      {% if s.weight %}{{ s.weight | weight }} ×{% endif %} {{ s.reps or '—' }}{% if s.rpe %} @ {{ s.rpe | rpe }}{% endif %}
+      <span class="tag small">{{ s.rx_or_scaled }}</span></li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>Finish up</h2>
+  <form method="post" action="/today/complete" class="stack" data-confirm="Mark this session complete?">
+    <input type="hidden" name="session_id" value="{{ sess.id }}">
+    <label>How hard was the whole session? <output id="srpeOut">6</output>/10
+      <input type="range" name="session_rpe" min="0" max="10" value="6" data-output="srpeOut">
+    </label>
+    <fieldset class="redflags">
+      <legend>Post-workout warning-sign check</legend>
+      <label class="check"><input type="checkbox" name="redflag_dark_urine" value="1"> Dark / cola-coloured urine</label>
+      <label class="check"><input type="checkbox" name="redflag_pain_swelling" value="1"> Abnormal muscle pain or swelling</label>
+      <label class="check"><input type="checkbox" name="redflag_weakness" value="1"> Unusual weakness</label>
+    </fieldset>
+    <button class="btn primary big" type="submit">Complete session</button>
+  </form>
+</section>
+{% endif %}
+
+{% endblock %}

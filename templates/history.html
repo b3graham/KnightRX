@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}History · {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Progress</h1>
+  {% if movements %}
+  <p class="muted">Pick a movement to see it trend over time. Estimated and tested points are shown together, estimates hollow.</p>
+  <label>Movement
+    <select id="movePicker">
+      {% for m in movements %}<option value="{{ m.id }}">{{ m.name }} ({{ m.n }})</option>{% endfor %}
+    </select>
+  </label>
+  <div class="chartbox" id="chart" role="img" aria-label="Progress chart"></div>
+  <details class="logbox"><summary>View as table</summary>
+    <table class="prs" id="chartTable"><tr><th>Date</th><th>Value</th><th>Kind</th><th>Source</th></tr></table>
+  </details>
+  {% else %}
+  <p class="muted">No history yet — log sets on Today and your progress will chart here.</p>
+  {% endif %}
+</section>
+
+{% if movements %}
+<script src="/static/charts.js"></script>
+{% endif %}
+{% endblock %}

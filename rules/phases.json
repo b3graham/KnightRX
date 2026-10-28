@@ -1,0 +1,49 @@
+{
+  "_comment": "Phase progression. Progression is gated by readiness (see the engine), not just these week ranges. 'days_per_week' is the target number of scheduled weekdays; 'days_per_week_max' is the ceiling even if more weekdays are selected. Strength 'load_mode': 'rpe' = empty/light bar to the RPE cap (used until a non-historical estimated max exists); 'pct_est' = percentage of the estimated max (a tested max is preferred when present). wod_movements_max bounds couplet/triplet size.",
+
+  "global": {
+    "deload_every_weeks": 4,
+    "gap_reset_days": 7,
+    "rpe_scale_max": 10,
+    "repeat_if_avg_soreness_gte": 7,
+    "active_recovery_if_soreness_gte": 7
+  },
+
+  "phases": [
+    {
+      "phase": 0, "name": "Re-entry", "week_start": 1, "week_end": 4,
+      "days_per_week": 3, "days_per_week_max": 3,
+      "rpe_cap": 6, "wod_min": [6, 10], "session_cap_min": 45,
+      "wod_formats": ["steady", "intervals_easy"], "wod_movements_max": 2,
+      "allow_testing": false,
+      "strength": {"sets": 3, "reps": 5, "load_mode": "rpe", "rpe": 6}
+    },
+    {
+      "phase": 1, "name": "Foundation", "week_start": 5, "week_end": 10,
+      "days_per_week": 3, "days_per_week_max": 4,
+      "rpe_cap": 7, "wod_min": [8, 12], "session_cap_min": 50,
+      "wod_formats": ["amrap", "for_time", "intervals"], "wod_movements_max": 2,
+      "allow_testing": false,
+      "strength": {"sets": 5, "reps": 5, "load_mode": "pct_est", "pct": 0.60,
+                   "progression_lb": {"upper": 5, "lower": 10}}
+    },
+    {
+      "phase": 2, "name": "Build", "week_start": 11, "week_end": 18,
+      "days_per_week": 4, "days_per_week_max": 4,
+      "rpe_cap": 8, "wod_min": [15, 20], "session_cap_min": 60,
+      "wod_formats": ["amrap", "for_time", "intervals", "emom"], "wod_movements_max": 3,
+      "allow_testing": true, "testing_at_phase_end": true, "testing_order": ["5RM", "3RM", "1RM"],
+      "strength": {"sets": 5, "reps": 3, "load_mode": "pct_est", "pct": 0.70,
+                   "progression_lb": {"upper": 5, "lower": 10}}
+    },
+    {
+      "phase": 3, "name": "Full", "week_start": 19, "week_end": null,
+      "days_per_week": 4, "days_per_week_max": 5,
+      "rpe_cap": 9, "wod_min": [10, 20], "session_cap_min": 60,
+      "wod_formats": ["amrap", "for_time", "intervals", "emom", "benchmark"], "wod_movements_max": 4,
+      "allow_testing": true, "testing_order": ["5RM", "3RM", "1RM"],
+      "strength": {"sets": 5, "reps": 3, "load_mode": "pct_est", "pct": 0.75,
+                   "progression_lb": {"upper": 5, "lower": 10}}
+    }
+  ]
+}

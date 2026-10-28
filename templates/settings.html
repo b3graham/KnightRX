@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Settings · {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Settings</h1>
+  <p class="muted">Equipment drives substitutions; training days drive the week; the phase
+     override is a manual escape hatch.</p>
+</section>
+
+<section class="card">
+  <h2>Equipment</h2>
+  <form method="post" action="/settings/equipment" class="stack">
+    {% for e in equipment %}
+    <div class="equip-row">
+      <label class="check"><input type="checkbox" name="owned_{{ e.id }}" value="1" {% if e.owned %}checked{% endif %}> {{ e.name }}</label>
+      {% if e.multi_weight %}
+      <input type="text" name="weights_{{ e.id }}" value="{{ e.weights | replace('[','') | replace(']','') }}"
+             placeholder="weights in lb, e.g. 26 35 53">
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button class="btn primary" type="submit">Save equipment</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Training days</h2>
+  <form method="post" action="/settings/training-days" class="stack">
+    {% for p in phases %}
+    <fieldset>
+      <legend>Phase {{ p.phase }} — {{ p.name }} ({{ p.days_per_week }}×, max {{ p.days_per_week_max }})</legend>
+      <div class="daygrid">
+        {% for d in days %}
+        <label class="check pillcheck"><input type="checkbox" name="day_{{ p.phase }}_{{ d }}" value="1"
+          {% if d in weekdays[p.phase|string] %}checked{% endif %}> {{ d }}</label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    {% endfor %}
+    <button class="btn primary" type="submit">Save training days</button>
+  </form>
+</section>
+
+<section class="card warn">
+  <h2>Phase override</h2>
+  <p class="muted">Jumping phases skips the readiness ramp that protects you. Only use this
+     with good reason.</p>
+  <form method="post" action="/settings/phase-override" class="inline-form"
+        data-confirm="Override the phase? This bypasses the gradual progression.">
+    <select name="phase">
+      {% for p in phases %}<option value="{{ p.phase }}" {% if p.phase == st.phase %}selected{% endif %}>Phase {{ p.phase }} — {{ p.name }}</option>{% endfor %}
+    </select>
+    <label class="check"><input type="checkbox" name="confirm" value="1"> I understand</label>
+    <button class="btn warn" type="submit">Set phase</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Export your data</h2>
+  <p class="muted">Everything is yours. Download anytime; keep a backup off the server.</p>
+  <div class="inline-form">
+    <a class="btn" href="/export/all.json">Full JSON</a>
+    <a class="btn" href="/export/prs.csv">PRs CSV</a>
+    <a class="btn" href="/export/sessions.csv">Sessions CSV</a>
+    <a class="btn" href="/export/sets.csv">Sets CSV</a>
+  </div>
+</section>
+
+{% endblock %}
