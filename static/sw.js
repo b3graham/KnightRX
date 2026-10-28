@@ -1,7 +1,7 @@
 // Backyard Box service worker — offline app shell.
 // Network-first for navigations (fresh data when online, cached page when not); cache-first
 // for static assets. GET only — never intercept POSTs (logging must hit the server).
-const CACHE = "bbox-v1";
+const CACHE = "bbox-v2";
 const SHELL = ["/", "/static/style.css", "/static/app.js", "/static/icons/icon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
