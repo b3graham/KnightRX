@@ -1,4 +1,4 @@
-# Backyard Box
+# Knight RX
 
 A single-user, mobile-first PWA that tracks your PRs and generates **progressive,
 safety-capped CrossFit programming** — built for returning to training slowly and safely.

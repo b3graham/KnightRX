@@ -16,7 +16,7 @@ DB_PATH = os.path.join(DATA_DIR, "backyard.db")
 # Editable, committed rule files (the engine's source of truth).
 RULES_DIR = os.environ.get("RULES_DIR", os.path.join(BASE_DIR, "rules"))
 
-APP_NAME = os.environ.get("APP_NAME", "Backyard Box")
+APP_NAME = os.environ.get("APP_NAME", "Knight RX")
 
 # Timezone label only used for display; the app stores ISO dates.
 TZ_LABEL = os.environ.get("TZ_LABEL", "America/New_York")

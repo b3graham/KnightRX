@@ -1,4 +1,4 @@
-// Backyard Box — minimal vanilla JS: live range outputs, destructive-form confirm,
+// Knight RX — minimal vanilla JS: live range outputs, destructive-form confirm,
 // a brief PR celebration, and service-worker registration for offline use.
 (function () {
   "use strict";

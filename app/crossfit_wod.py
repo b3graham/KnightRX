@@ -20,7 +20,7 @@ from . import db
 
 WORKOUT_URL = "https://www.crossfit.com/workout/{y:04d}/{m:02d}/{d:02d}"
 PAGE_URL = "https://www.crossfit.com/workout/{y:04d}/{m:02d}/{d:02d}"
-_UA = "Mozilla/5.0 (Backyard Box; reference WOD fetch)"
+_UA = "Mozilla/5.0 (Knight RX; reference WOD fetch)"
 _TIMEOUT = 6.0
 
 # Where the readable workout stops and site boilerplate / demo-video links begin.

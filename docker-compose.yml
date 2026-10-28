@@ -4,7 +4,7 @@ services:
     container_name: backyard-box
     restart: unless-stopped
     environment:
-      - APP_NAME=Backyard Box
+      - APP_NAME=Knight RX
     # Bind to localhost only — Caddy is the public entrance and adds basic auth.
     ports:
       - "127.0.0.1:8110:8000"

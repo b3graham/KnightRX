@@ -1,7 +1,7 @@
 {
-  "name": "Backyard Box",
-  "short_name": "Backyard Box",
-  "description": "Backyard CrossFit PR tracker and progressive, safety-capped programming.",
+  "name": "Knight RX",
+  "short_name": "Knight RX",
+  "description": "Knight RX — CrossFit PR tracker and progressive, safety-capped programming.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
