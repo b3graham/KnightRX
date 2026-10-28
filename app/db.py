@@ -124,6 +124,13 @@ CREATE TABLE IF NOT EXISTS app_settings (
     phase_override INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS crossfit_wod (
+    date TEXT PRIMARY KEY,      -- ISO date of the CrossFit.com main-site WOD
+    url TEXT NOT NULL,
+    body TEXT NOT NULL,         -- readable workout text (reference only; not programmed)
+    fetched_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS program_state (
     id INTEGER PRIMARY KEY CHECK (id = 1),
     phase INTEGER NOT NULL DEFAULT 0,

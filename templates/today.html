@@ -175,4 +175,17 @@
 </section>
 {% endif %}
 
+{% if view != "blocked" %}
+<section class="card cfwod" id="cfwod">
+  <div class="sesshead">
+    <h2>🏋️ CrossFit.com — Workout of the Day</h2>
+    <a class="muted" href="https://www.crossfit.com" target="_blank" rel="noopener">crossfit.com ↗</a>
+  </div>
+  <p class="muted reference-note">Reference only. This is the official main-site WOD — it is
+    <strong>not your prescription</strong> and is <strong>not safety-capped</strong>. Follow
+    your programmed session above; read this for interest or to scale a piece into your plan.</p>
+  <div class="cfwod-body" data-loading>Loading today's CrossFit.com WOD…</div>
+</section>
+{% endif %}
+
 {% endblock %}

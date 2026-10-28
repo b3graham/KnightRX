@@ -29,6 +29,36 @@
     }
   } catch (_) {}
 
+  // Load the official CrossFit.com WOD (reference only) into the Today-page card.
+  // Lazy fetch so the page renders instantly and offline/failure degrades gracefully.
+  (function () {
+    var card = document.getElementById("cfwod");
+    if (!card) return;
+    var body = card.querySelector(".cfwod-body");
+    fetch("/api/crossfit-wod", { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.ok && d.body) {
+          body.textContent = d.body;          // CSS renders newlines (white-space: pre-line)
+          body.removeAttribute("data-loading");
+        } else {
+          showFallback(body, d && d.url);
+        }
+      })
+      .catch(function () { showFallback(body, "https://www.crossfit.com"); });
+
+    function showFallback(el, url) {
+      el.removeAttribute("data-loading");
+      el.textContent = "Couldn't load today's CrossFit.com WOD. ";
+      var a = document.createElement("a");
+      a.href = url || "https://www.crossfit.com";
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = "View it on crossfit.com ↗";
+      el.appendChild(a);
+    }
+  })();
+
   // Register the service worker (offline shell). Best-effort.
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {

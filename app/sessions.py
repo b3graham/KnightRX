@@ -11,9 +11,9 @@ import json
 from datetime import date
 
 from fastapi import APIRouter, Form, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
-from . import db, rules, state, web
+from . import crossfit_wod, db, rules, state, web
 from .engine import generate
 
 router = APIRouter()
@@ -168,3 +168,14 @@ async def calendar(request: Request):
     return web.page(request, "calendar.html", st=st, sessions=rows, decisions=decisions,
                     scheduled=scheduled, phase_def=rules.phase_def(st["phase"]),
                     summary=summary, mv=rules.movement_by_id)
+
+
+@router.get("/api/crossfit-wod")
+def crossfit_wod_api(date_str: str | None = None):
+    """Today's official CrossFit.com WOD — reference only, cached once per day.
+
+    Sync route on purpose: FastAPI runs it in a threadpool, so the outbound HTTP call
+    never blocks the event loop. Any failure returns ok=False and the page degrades.
+    """
+    on = date.fromisoformat(date_str) if date_str else date.today()
+    return JSONResponse(crossfit_wod.get(on))
